@@ -8,33 +8,42 @@ jobs:
     working_directory: ~/bulma
     docker:
       # specify the version you desire here
-      - image: circleci/ruby:2.6.0-node
+      - image: circleci/ruby:2.6-node
 
     steps:
       - checkout
+      - run:
+          name: "Update Node.js and npm"
+          command: |
+            curl -sSL "https://nodejs.org/dist/v8.15.0/node-v8.15.0-linux-x64.tar.xz" | sudo tar --strip-components=2 -xJ -C /usr/local/bin/ node-v8.15.0-linux-x64/bin/node
+            curl https://www.npmjs.com/install.sh | sudo bash
+      - run:
+          name: Check current version of node
+          command: node -v
 
-      #Restoring npm cache
-      # - restore_cache:
-      #     name: Restoring npm cache
-      #     keys:
-      #       # when lock file changes, use increasingly general patterns to restore cache
-      #       - npm-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
-      #       - npm-v1-{{ .Branch }}-
-      #       - npm-v1-
+
+      #Restoring yarn cache
+      - restore_cache:
+          name: Restoring yarn cache
+          keys:
+            # when lock file changes, use increasingly general patterns to restore cache
+            - yarn-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            - yarn-v1-{{ .Branch }}-
+            - yarn-v1-
 
       - run: yarn
 
-      #Saving npm cache
+      #Saving yarn cache
       - save_cache:
-          name: Saving npm cache
+          name: Saving yarn cache
           paths:
-            -  node_modules  # location depends on npm version
-          key: npm-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+            -  node_modules  # location depends on yarn version
+          key: yarn-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
 
       # Restoring bundler cache
-      # - restore_cache:
-      #     name: Restoring bundler cache
-      #     key: circlev2-{{ checksum "Gemfile.lock" }}
+      - restore_cache:
+          name: Restoring bundler cache
+          key: bundler-v2-{{ checksum "Gemfile.lock" }}
 
       #Bundler Dependencies
       - run: 
@@ -44,7 +53,7 @@ jobs:
       # Saving bundler cache
       - save_cache:
           name: Saving bundler cache
-          key: circlev2-{{ checksum "Gemfile.lock" }}
+          key: bundler-v2-{{ checksum "Gemfile.lock" }}
           paths: 
             - ./vendor/bundle 
 
