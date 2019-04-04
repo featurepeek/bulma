@@ -21,7 +21,6 @@ jobs:
           name: Check current version of node
           command: node -v
 
-
       #Restoring yarn cache
       - restore_cache:
           name: Restoring yarn cache
@@ -39,6 +38,8 @@ jobs:
           paths:
             -  node_modules  # location depends on yarn version
           key: yarn-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
+
+      - run: gem install bundler:2.0.1
 
       # Restoring bundler cache
       - restore_cache:
