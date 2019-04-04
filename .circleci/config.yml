@@ -5,9 +5,11 @@
 version: 2
 jobs:
   build:
+    working_directory: ~/bulma
     docker:
       # specify the version you desire here
       - image: circleci/ruby:2.6.0-node
+    working
 
     steps:
       - checkout
