@@ -10,22 +10,7 @@ jobs:
       - image: circleci/ruby:2.6.0-node
 
     steps:
-      # Restoring source code cache
-      - restore_cache:
-          name: Restoring source code cache
-          keys:
-            - source-v1-{{ .Branch }}-{{ .Revision }}
-            - source-v1-{{ .Branch }}-
-            - source-v1-
-
       - checkout
-
-      #Saving source code cache
-      - save_cache:
-          name: Saving source code cache
-          key: source-v1-{{ .Branch }}-{{ .Revision }}
-          paths:
-            - ".git"
 
       #Restoring npm cache
       - restore_cache:
