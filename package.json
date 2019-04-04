@@ -27,6 +27,7 @@
     "url": "https://github.com/jgthms/bulma/issues"
   },
   "devDependencies": {
+    "@featurepeek/circleci": "^0.0.15",
     "autoprefixer": "^9.4.7",
     "clean-css-cli": "^4.2.1",
     "node-sass": "^4.11.0",
