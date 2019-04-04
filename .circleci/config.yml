@@ -7,7 +7,9 @@ jobs:
   build:
     docker:
       # specify the version you desire here
-      - image: starefossen/ruby-node:2-8
+      - image: circleci/ruby:2.6.0-node
+        environment:
+          BUNDLER_VERSION: 2.0.1
 
     steps:
       # Restoring source code cache
@@ -45,18 +47,22 @@ jobs:
             -  node_modules  # location depends on npm version
           key: npm-v1-{{ .Branch }}-{{ checksum "yarn.lock" }}
 
+      # Restoring bundler cache
       - restore_cache:
-          keys:
-            - rubygems-v1-{{ checksum "Gemfile.lock" }}
-            - rubygems-v1-fallback
-      - run:
-          name: Bundle Install
-          command: bundle install --jobs=4 --retry=3 --path vendor/bundle
+          name: Restoring bundler cache
+          key: circlev2-{{ checksum "Gemfile.lock" }}
 
+      #Bundler Dependencies
+      - run: 
+          name: Jekyll deps
+          command: bundle install --jobs=4 --retry=3 --path vendor/bundle
+      
+      # Saving bundler cache
       - save_cache:
-          key: rubygems-v1-{{ checksum "Gemfile.lock" }}
-          paths:
-            - vendor/bundle
+          name: Saving bundler cache
+          key: circlev2-{{ checksum "Gemfile.lock" }}
+          paths: 
+            - ./vendor/bundle 
 
       - run:
           name: Jekyll build
