@@ -60,7 +60,7 @@ jobs:
 
       - run:
           name: Jekyll build
-          command: bundle exec jekyll build
+          command: cd docs && bundle exec jekyll build
 
       - store_artifacts:
           path: ./docs/_site
